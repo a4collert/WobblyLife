@@ -187,16 +187,19 @@ function App() {
             : groupArtifacts;
           if (filteredArtifacts.length === 0) return null;
           return (
-            <div key={group} style={{
-              flex: '1 1 30%',
-              maxWidth: '32%',
-              minWidth: 320,
-              marginBottom: '2.5rem',
-              background: 'var(--color-bg-alt)',
-              borderRadius: 12,
-              boxShadow: '0 2px 8px var(--color-shadow)',
-              padding: 16,
-            }}>
+            <div
+              key={group}
+              className="artifact-group-container"
+              style={{
+                flex: '1 1 30%',
+                maxWidth: '32%',
+                minWidth: 320,
+                marginBottom: '2.5rem',
+                borderRadius: 12,
+                boxShadow: '0 2px 8px var(--color-shadow)',
+                padding: 16,
+              }}
+            >
               <h2 style={{ borderBottom: '2px solid var(--color-border)', paddingBottom: 4, marginBottom: 8, color: 'var(--color-text)' }}>{group}</h2>
               {groupRewards[group] && (
                 <div style={{ fontSize: 15, color: 'var(--color-accent)', marginBottom: 12 }}>
@@ -207,16 +210,7 @@ function App() {
                 {filteredArtifacts.map((artifact) => (
                   <li
                     key={artifact.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      border: '1px solid #ccc',
-                      borderRadius: 8,
-                      padding: '1rem',
-                      marginBottom: '1rem',
-                      background: found[artifact.id] ? '#e6ffe6' : '#fff',
-                      listStyle: 'none',
-                    }}
+                    className={`artifact-tile${found[artifact.id] ? ' found' : ''}`}
                   >
                     <input
                       type="checkbox"

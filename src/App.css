@@ -1,3 +1,29 @@
+body.dark .artifact-tile button,
+body.dark .artifact-tile em,
+body.dark .artifact-tile .clue-green {
+  color: #007a00 !important;
+}
+body.dark .artifact-tile, body.dark .artifact-tile * {
+  color: var(--color-text) !important;
+}
+/* Group container for artifact groups */
+.artifact-group-container {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  padding: 16px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+body.dark .artifact-group-container {
+  background: #181a1b;
+  border-color: #222;
+}
+body.dark .artifact-list > div[style*="background"] {
+  background: #181a1b !important;
+  border-color: #222 !important;
+}
 
 
 :root {
@@ -41,7 +67,8 @@ body.dark {
 }
 
 
-.artifact-list li {
+
+.artifact-tile {
   display: flex;
   align-items: center;
   border: 1px solid var(--color-border);
@@ -52,6 +79,25 @@ body.dark {
   list-style: none;
   gap: 1rem;
   box-shadow: 0 2px 8px var(--color-shadow);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.artifact-tile.found {
+  background: var(--color-accent-bg);
+}
+
+body.dark .artifact-tile {
+  background: #101113;
+  border-color: #222;
+}
+
+body.dark .artifact-tile.found {
+  background: #182818;
+}
+
+body.dark .artifact-list li {
+  background: #101113;
+  border-color: #222;
 }
 
 
