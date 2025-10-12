@@ -33,6 +33,23 @@ function App() {
     } catch {}
     return 'town';
   });
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const stored = localStorage.getItem('darkMode');
+      if (stored === 'true') return true;
+    } catch {}
+    // Optionally, use prefers-color-scheme
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return true;
+    }
+    return false;
+  });
+
+  // Update body class for dark mode
+  useEffect(() => {
+    if (darkMode) document.body.classList.add('dark');
+    else document.body.classList.remove('dark');
+  }, [darkMode]);
 
   // Load found state from localStorage
   useEffect(() => {
@@ -49,6 +66,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('artifactTab', tab);
   }, [tab]);
+
+  // Save dark mode preference
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode ? 'true' : 'false');
+  }, [darkMode]);
 
   const handleCheck = (id: string) => {
     setFound((prev) => {
@@ -87,20 +109,38 @@ function App() {
   return (
     <div className="artifact-list" style={{ maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
-  <img src={`${import.meta.env.BASE_URL}RandomPics/Wobbly.png`} alt="Wobbly" style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />
+        <img src={`${import.meta.env.BASE_URL}RandomPics/Wobbly.png`} alt="Wobbly" style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />
         <h1 style={{ margin: 0 }}>Wobbly Life Artifact Tracker</h1>
+        <button
+          onClick={() => setDarkMode(d => !d)}
+          style={{
+            marginLeft: 'auto',
+            padding: '8px 16px',
+            borderRadius: 6,
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-bg-alt)',
+            color: 'var(--color-text)',
+            fontWeight: 600,
+            cursor: 'pointer',
+            fontSize: 15,
+            boxShadow: '0 1px 4px var(--color-shadow)'
+          }}
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
       </div>
-  <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-  {/* Percent Collected */}
-  <PercentCollected found={found} artifacts={filteredArtifactsByTab} />
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        {/* Percent Collected */}
+        <PercentCollected found={found} artifacts={filteredArtifactsByTab} />
         <button
           onClick={() => setTab('town')}
           style={{
             padding: '8px 20px',
             borderRadius: 6,
-            border: tab === 'town' ? '2px solid #007a00' : '1px solid #ccc',
-            background: tab === 'town' ? '#e6ffe6' : '#fff',
-            color: tab === 'town' ? '#007a00' : '#333',
+            border: tab === 'town' ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+            background: tab === 'town' ? 'var(--color-accent-bg)' : 'var(--color-bg)',
+            color: tab === 'town' ? 'var(--color-accent)' : 'var(--color-text)',
             fontWeight: tab === 'town' ? 700 : 400,
             cursor: 'pointer',
             fontSize: 16,
@@ -113,9 +153,9 @@ function App() {
           style={{
             padding: '8px 20px',
             borderRadius: 6,
-            border: tab === 'space' ? '2px solid #007a00' : '1px solid #ccc',
-            background: tab === 'space' ? '#e6ffe6' : '#fff',
-            color: tab === 'space' ? '#007a00' : '#333',
+            border: tab === 'space' ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+            background: tab === 'space' ? 'var(--color-accent-bg)' : 'var(--color-bg)',
+            color: tab === 'space' ? 'var(--color-accent)' : 'var(--color-text)',
             fontWeight: tab === 'space' ? 700 : 400,
             cursor: 'pointer',
             fontSize: 16,
@@ -129,7 +169,7 @@ function App() {
         placeholder="Search by group or artifact name..."
         value={search}
         onChange={e => setSearch(e.target.value)}
-        style={{ width: '100%', padding: 8, marginBottom: 24, fontSize: 16, borderRadius: 6, border: '1px solid #ccc' }}
+        style={{ width: '100%', padding: 8, marginBottom: 24, fontSize: 16, borderRadius: 6, border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
       />
       <div style={{
         display: 'grid',
@@ -147,10 +187,19 @@ function App() {
             : groupArtifacts;
           if (filteredArtifacts.length === 0) return null;
           return (
-            <div key={group} style={{ flex: '1 1 30%', maxWidth: '32%', minWidth: 320, marginBottom: '2.5rem', background: '#fafbfc', borderRadius: 12, boxShadow: '0 2px 8px #0001', padding: 16 }}>
-              <h2 style={{ borderBottom: '2px solid #ccc', paddingBottom: 4, marginBottom: 8 }}>{group}</h2>
+            <div key={group} style={{
+              flex: '1 1 30%',
+              maxWidth: '32%',
+              minWidth: 320,
+              marginBottom: '2.5rem',
+              background: 'var(--color-bg-alt)',
+              borderRadius: 12,
+              boxShadow: '0 2px 8px var(--color-shadow)',
+              padding: 16,
+            }}>
+              <h2 style={{ borderBottom: '2px solid var(--color-border)', paddingBottom: 4, marginBottom: 8, color: 'var(--color-text)' }}>{group}</h2>
               {groupRewards[group] && (
-                <div style={{ fontSize: 15, color: '#007a00', marginBottom: 12 }}>
+                <div style={{ fontSize: 15, color: 'var(--color-accent)', marginBottom: 12 }}>
                   <em>Reward for completing this group:</em> {groupRewards[group]}
                 </div>
               )}
