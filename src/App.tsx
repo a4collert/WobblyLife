@@ -1,5 +1,4 @@
 
-import React from 'react';
 import './App.css';
 import { artifacts, groupRewards } from './data/artifacts';
 import { useEffect, useState } from 'react';
