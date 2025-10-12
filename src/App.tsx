@@ -20,12 +20,19 @@ const PercentCollected = ({ found, artifacts }: PercentCollectedProps) => {
 };
 
 
+
 function App() {
   const [found, setFound] = useState<{ [id: string]: boolean }>({});
   const [search, setSearch] = useState('');
   const [showHowToGet, setShowHowToGet] = useState<{ [id: string]: boolean }>({});
   const [showClue, setShowClue] = useState<{ [id: string]: boolean }>({});
-  const [tab, setTab] = useState<'town' | 'space'>('town');
+  const [tab, setTab] = useState<'town' | 'space'>(() => {
+    try {
+      const storedTab = localStorage.getItem('artifactTab');
+      if (storedTab === 'space') return 'space';
+    } catch {}
+    return 'town';
+  });
 
   // Load found state from localStorage
   useEffect(() => {
@@ -37,6 +44,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('foundArtifacts', JSON.stringify(found));
   }, [found]);
+
+  // Save tab to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('artifactTab', tab);
+  }, [tab]);
 
   const handleCheck = (id: string) => {
     setFound((prev) => {
@@ -75,7 +87,7 @@ function App() {
   return (
     <div className="artifact-list" style={{ maxWidth: 1400, margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
-        <img src="/RandomPics/Wobbly.png" alt="Wobbly" style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />
+  <img src={`${import.meta.env.BASE_URL}RandomPics/Wobbly.png`} alt="Wobbly" style={{ width: 48, height: 48, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />
         <h1 style={{ margin: 0 }}>Wobbly Life Artifact Tracker</h1>
       </div>
   <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
@@ -164,7 +176,7 @@ function App() {
                       style={{ marginRight: 16 }}
                     />
                     <img
-                      src={artifact.image}
+                      src={`${import.meta.env.BASE_URL}${artifact.image}`}
                       alt={artifact.name}
                       style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 8, background: '#eee', marginRight: 16 }}
                       onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/60?text=No+Image')}
